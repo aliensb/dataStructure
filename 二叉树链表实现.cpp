@@ -13,6 +13,7 @@ typedef char ElemeType;
 typedef struct BiTNode  /* 结点结构 */
 {
 	ElemeType data;		/* 结点数据 */
+	int flag;/*表明节点是否被访问过，如果被访问过，则值为1*/
 	struct BiTNode *lchild, *rchild; /* 左右孩子指针 */
 }BiTNode, *BiTree; 
 
@@ -134,10 +135,91 @@ void preOrderVisitBtreeWithoutrecursion(BiTree bt, void(*func)(BiTNode*))
 		}
 	}
 }
-
+/*不通过栈实现二叉树的中序遍历*/
 void middleOrderVisitBtreeWithoutrecursion(BiTree bt, void(*func)(BiTNode*))
 {
-		
+	if (!bt)
+	{
+		//		printf("树为空!!\n");
+		return;
+	}
+	std::stack<BiTNode> stk;
+	BiTree point = bt;
+	BiTNode node;
+	while (point || !stk.empty())
+	{
+		if (point)
+		{
+			stk.push(*point);
+			point = point->lchild;
+		}
+		else
+		{
+			node = stk.top();
+			stk.pop();
+			func(&node);
+			point = node.rchild;
+		}
+	}
+}
+
+void afterOrderVisitBtreeWithoutrecursion(BiTree bt, void(*func)(BiTNode*))
+{
+	if (!bt)
+	{
+		//		printf("树为空!!\n");
+		return;
+	}
+	std::stack<BiTNode*> stk;
+	BiTree point = bt;//当前访问的节点
+	BiTNode* node;//当前节点的父节点
+	while (point || !stk.empty())
+	{
+		/*如果当前节点有左孩子并且左孩子没有被访问过或者有右孩子并且右孩子没有被访问过*/
+		if ((point->lchild&&point->lchild->flag!=1)||
+			(point->rchild&&point->rchild->flag!=1))
+		{
+			stk.push(point);
+			if (point->lchild)
+			{
+				point = point->lchild;
+			}
+			else
+			{
+				point = point->rchild;
+			}
+		}
+		else
+		{
+			if (point->flag == 1)//访问过的节点
+			{
+
+			}
+			else
+			{
+				func(point);
+				point->flag = 1;
+				if (stk.empty())//如果point还有值，但是栈空了，说明就到了根节点
+					break;
+				node = stk.top();//这里要判断一下，如果栈空了
+				if (node->lchild&&node->lchild->flag != 1)
+				{
+					point = node->lchild;
+				}
+				else if (node->rchild&&node->rchild->flag != 1)
+				{
+					point = node->rchild;
+				}
+				if ((!node->lchild || node->lchild->flag == 1) &&
+					(!node->rchild || node->rchild->flag == 1))
+				{
+					
+					point = node;
+					stk.pop();
+				}
+			}
+		}
+	}
 }
 int main()
 {
@@ -153,6 +235,10 @@ int main()
 	afterOrderVisitBtree(bt,printNode);
 	printf("不通过递归实现先序遍历:\n");
 	preOrderVisitBtreeWithoutrecursion(bt, printNode);
+	printf("不通过递归实现中序遍历:\n");
+	middleOrderVisitBtreeWithoutrecursion(bt, printNode);
+	printf("不通过递归实现后序遍历:\n");
+	afterOrderVisitBtreeWithoutrecursion(bt, printNode);
 	system("pause");
     return 0;
 }
