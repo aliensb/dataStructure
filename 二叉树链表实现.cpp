@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include <stdlib.h>
+#include <stack>//标准库栈
 
 #define OK 1
 #define ERROR 0
@@ -104,6 +105,40 @@ void afterOrderVisitBtree(BiTree bt, void(*func)(BiTNode*))
 		func(bt);
 	}
 }
+
+
+/*不通过栈实现二叉树的先序遍历*/
+void preOrderVisitBtreeWithoutrecursion(BiTree bt, void(*func)(BiTNode*))
+{
+	if (!bt)
+	{
+		//		printf("树为空!!\n");
+		return;
+	}
+	std::stack<BiTNode> stk;
+	BiTree point = bt;
+	BiTNode node;
+	while (point || !stk.empty())
+	{
+		if (point)
+		{
+			func(point);
+			stk.push(*point);
+			point = point->lchild;
+		}
+		else
+		{
+			node =stk.top();
+			stk.pop();
+			point = node.rchild;
+		}
+	}
+}
+
+void middleOrderVisitBtreeWithoutrecursion(BiTree bt, void(*func)(BiTNode*))
+{
+		
+}
 int main()
 {
 	BiTree bt;//创建一个指向树根节点的指针，
@@ -116,6 +151,8 @@ int main()
 	middleOrderVisitBtree(bt, printNode);
 	printf("后序遍历结果：\n");
 	afterOrderVisitBtree(bt,printNode);
+	printf("不通过递归实现先序遍历:\n");
+	preOrderVisitBtreeWithoutrecursion(bt, printNode);
 	system("pause");
     return 0;
 }

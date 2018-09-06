@@ -108,7 +108,7 @@ void afterOrderVisitBtree(BiTree bt, void(*func)(BiTNode*))
 
 
 /*不通过栈实现二叉树的先序遍历*/
-void afterOrderVisitBtreeWithoutrecursion(BiTree bt, void(*func)(BiTNode*))
+void preOrderVisitBtreeWithoutrecursion(BiTree bt, void(*func)(BiTNode*))
 {
 	if (!bt)
 	{
@@ -118,7 +118,7 @@ void afterOrderVisitBtreeWithoutrecursion(BiTree bt, void(*func)(BiTNode*))
 	std::stack<BiTNode> stk;
 	BiTree point = bt;
 	BiTNode node;
-	while (true)
+	while (point || !stk.empty())
 	{
 		if (point)
 		{
@@ -130,12 +130,14 @@ void afterOrderVisitBtreeWithoutrecursion(BiTree bt, void(*func)(BiTNode*))
 		{
 			node =stk.top();
 			stk.pop();
-			if (node.rchild)
-			{
-				func(&node);
-			}
+			point = node.rchild;
 		}
 	}
+}
+
+void middleOrderVisitBtreeWithoutrecursion(BiTree bt, void(*func)(BiTNode*))
+{
+		
 }
 int main()
 {
@@ -149,6 +151,8 @@ int main()
 	middleOrderVisitBtree(bt, printNode);
 	printf("后序遍历结果：\n");
 	afterOrderVisitBtree(bt,printNode);
+	printf("不通过递归实现先序遍历:\n");
+	preOrderVisitBtreeWithoutrecursion(bt, printNode);
 	system("pause");
     return 0;
 }
