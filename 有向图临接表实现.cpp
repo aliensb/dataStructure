@@ -1,4 +1,4 @@
-// 无向图邻接表实现.cpp : Defines the entry point for the console application.
+// 有向图临接表实现.cpp : Defines the entry point for the console application.
 //
 
 #include "stdafx.h"
@@ -18,14 +18,14 @@ typedef int EdgeType;
 typedef struct EgeNode {
 	int adjIndex;
 	EdgeType weight;
-	EgeNode  * next= NULL;
+	EgeNode  * next = NULL;
 }EgeNode;
 
-typedef struct VertexNode{
+typedef struct VertexNode {
 	VertexType data;
-	EgeNode * firstEge=NULL;
+	EgeNode * firstEge = NULL;
 
-}VertexNode,adjList[MAXVEX];
+}VertexNode, adjList[MAXVEX];
 
 typedef struct {
 	adjList list;
@@ -41,7 +41,7 @@ status creatGraph(GraphAdj *adj)
 	cin >> adj->vertexNu;
 	printf("请输入图的边数\n");
 	cin >> adj->egeNu;
-	for (int i = 0; i < adj->vertexNu; i++) 
+	for (int i = 0; i < adj->vertexNu; i++)
 	{
 		printf("请输入第%d个顶点", i + 1);
 		cin >> adj->list[i].data;
@@ -60,17 +60,12 @@ status creatGraph(GraphAdj *adj)
 				v2 = j;
 		}
 		//头插法插入新的边节点
-		EgeNode * node1 = (EgeNode*) malloc(sizeof(EgeNode));
+		EgeNode * node1 = (EgeNode*)malloc(sizeof(EgeNode));
 		node1->next = adj->list[v1].firstEge;
 		adj->list[v1].firstEge = node1;
 		node1->weight = w;
 		node1->adjIndex = v2;
-		//无向图，需要两次添加
-		EgeNode * node2 = (EgeNode*)malloc(sizeof(EgeNode));
-		node2->next = adj->list[v2].firstEge;
-		adj->list[v2].firstEge = node2;
-		node2->weight = w;
-		node2->adjIndex = v1;
+	
 	}
 	return OK;
 }
@@ -78,6 +73,7 @@ int main()
 {
 	GraphAdj adj;
 	creatGraph(&adj);
-    return 0;
+	return 0;
 }
+
 
